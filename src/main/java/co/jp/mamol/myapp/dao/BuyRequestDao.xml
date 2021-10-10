@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.mamol.myapp.dao.BuyRequestDao">
+
+	<!-- 1001 -->
+	<insert id="requestRegist"
+		parameterType="co.jp.mamol.myapp.dto.SizaiDto">
+
+		insert into sizai
+		values(id_seq.nextval,#{name},#{num},null,#{category_id},#{request_user_id},#{request_dept_id},'1',sysdate,null,null,null,null,#{note})
+	</insert>
+
+	<!-- 1002 -->
+
+	<select id="getCategory"
+		resultType="co.jp.mamol.myapp.dto.CategoryDto">
+
+		select * from category
+
+	</select>
+
+	<!-- 1003 -->
+
+	<select id="getUserRequestList"
+		resultType="co.jp.mamol.myapp.dto.SizaiDto">
+
+		select s.id,s.name,s.num,s.CATEGORY_ID,c.name as
+		category_name,s.REQUEST_USER_ID,
+		u.name as request_user_name,s.REQUEST_DEPT_ID,d.name as request_dept_name,
+		s.status,sta.name as
+		status_name,to_char(s.REQUEST_DATE,'yyyy-mm-dd') as REQUEST_DATE ,s.note
+		from sizai s inner join category c on s.CATEGORY_ID = c.ID
+		inner join users u on s.REQUEST_USER_ID = u.id
+		inner join department d on s.REQUEST_DEPT_ID = d.id
+		inner join status sta on s.STATUS = sta.code
+
+		where s.REQUEST_DATE between to_date(#{startDate},'yyyy-mm-dd
+		hh24:mi:ss')and
+		to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss') order by s.REQUEST_DATE,s.id
+
+	</select>
+
+	<!-- 1004 -->
+
+	<select id="getRequestById"
+		resultType="co.jp.mamol.myapp.dto.SizaiDto">
+
+		select s.id,s.name,s.num,s.CATEGORY_ID,c.name as
+		catefory_name,s.REQUEST_USER_ID,
+		u.name as request_user_name,s.REQUEST_DEPT_ID,d.name as request_dept_name,
+		s.status,sta.name as status_name,to_char(s.REQUEST_DATE,'yyyy-mm-dd') as REQUEST_DATE,s.note
+		from sizai s inner join category c on s.CATEGORY_ID = c.ID
+		inner join users u on s.REQUEST_USER_ID = u.id
+		inner join department d on s.REQUEST_DEPT_ID = d.id
+		inner join status sta on s.STATUS = sta.code
+
+		where s.id = #{sizaiId}
+
+	</select>
+
+	<!-- 1005 -->
+
+	<update id="modifyRequest"
+		parameterType="co.jp.mamol.myapp.dto.SizaiDto">
+
+		update sizai set name = #{name},num = #{num},CATEGORY_ID = #{category_id},
+			STATUS = '1',REQUEST_DATE = sysdate,note = #{note}
+			where id = #{id} and (status = '1' or status ='3')
+
+
+	</update>
+
+	<!-- 1006 -->
+
+	<delete id="deleteById" >
+		delete from sizai where id = #{sizaiId} and status = '1' or status ='3'
+
+
+	</delete>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

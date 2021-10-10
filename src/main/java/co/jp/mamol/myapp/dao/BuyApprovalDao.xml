@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.mamol.myapp.dao.BuyApprovalDao">
+<!-- 2001 -->
+	<select id="getDeptRequestList"
+		resultType="co.jp.mamol.myapp.dto.SizaiDto">
+
+		select s.id,s.name,s.num,s.CATEGORY_ID,c.name as
+		catefory_name,s.REQUEST_USER_ID,
+		u.name as request_user_name,s.REQUEST_DEPT_ID,d.name as request_dept_name,
+		s.status,sta.name as
+		status_name,to_char(s.REQUEST_DATE,'yyyy-mm-dd')　as REQUEST_DATE,s.note
+		from sizai s inner join category c on s.CATEGORY_ID = c.ID
+		inner join users u on s.REQUEST_USER_ID = u.id
+		inner join department d on s.REQUEST_DEPT_ID = d.id
+		inner join status sta on s.STATUS = sta.code
+
+		where s.REQUEST_DATE between to_date(#{startDate},'yyyy-mm-dd
+		hh24:mi:ss')and
+		to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss') and s.REQUEST_DEPT_ID = #{deptId} order by s.REQUEST_DATE,s.id
+
+
+	</select>
+
+	<!-- 2002 -->
+
+	<select id="getRequestById"
+		resultType="co.jp.mamol.myapp.dto.SizaiDto">
+
+		select s.id,s.name,s.num,s.CATEGORY_ID,c.name as
+		catefory_name,s.REQUEST_USER_ID,
+		u.name as request_user_name,s.REQUEST_DEPT_ID,d.name as request_dept_name,
+		s.status,sta.name as
+		status_name,to_char(s.REQUEST_DATE,'yyyy-mm-dd')　as REQUEST_DATE,s.note
+		from sizai s inner join category c on s.CATEGORY_ID = c.ID
+		inner join users u on s.REQUEST_USER_ID = u.id
+		inner join department d on s.REQUEST_DEPT_ID = d.id
+		inner join status sta on s.STATUS = sta.code
+
+		where s.id = #{sizaiId}
+
+	</select>
+
+
+	<!-- 2003 -->
+
+		<update id="approval">
+
+		update sizai set status = '2'
+
+			where id = #{sizaiId} and (status = '1' or status ='3')
+
+
+	</update>
+
+	<!-- 2004 -->
+
+		<update id="regect">
+
+		update sizai set status = '3'
+
+			where id = #{sizaiId} and (status = '1')
+
+
+	</update>
+
+
+
+
+
+
+
+</mapper>
